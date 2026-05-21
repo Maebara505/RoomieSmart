@@ -12,7 +12,7 @@ export const createServer = (): Application => {
     app.use(cors());
     app.use(express.json());
 
-    // Rutas
+    // Routes
     app.post('/api/v1/auth/register', registerOnboarding);
     app.post('/api/v1/auth/login', loginController);
 
