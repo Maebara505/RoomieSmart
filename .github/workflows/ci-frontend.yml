@@ -1,0 +1,30 @@
+name: Integración Continua - Frontend RoomieSmart
+
+on:
+  pull_request:
+    branches: [ "dev", "main" ]
+
+jobs:
+  build:
+    name: Revisión de Código UI/UX
+    runs-on: ubuntu-latest
+    
+    # Esto asegura que busque el package.json dentro de la carpeta del frontend
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+    - name: Descargar el código
+      uses: actions/checkout@v4
+
+    - name: Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+
+    - name: Instalar dependencias
+      run: npm install
+
+    - name: Verificar compilación del proyecto
+      run: npm run build
