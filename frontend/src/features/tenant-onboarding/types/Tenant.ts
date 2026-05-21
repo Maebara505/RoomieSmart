@@ -3,8 +3,8 @@ export interface Demographics {
   originCity: string;
   occupation: 'STUDENT_ONLY' | 'WORKING_ONLY' | 'STUDENT_AND_WORKING';
   hobbies: string[];
-  musicalTastes: string[]; // <-- Nuevo
-  hasVehicle: 'CAR' | 'MOTORCYCLE' | 'NONE'; // <-- Nuevo
+  musicalTastes: string[];
+  hasVehicle: 'CAR' | 'MOTORCYCLE' | 'NONE';
 }
 
 export interface LifestylePreferences {
@@ -16,13 +16,14 @@ export interface LifestylePreferences {
   smokingHabits: 'SMOKER' | 'OUTSIDE_ONLY' | 'NON_SMOKER';
   foodSharing: 'SHARE_EVERYTHING' | 'SHARE_BASICS' | 'STRICTLY_SEPARATE';
   noiseTolerance: 'SILENCE_NEEDED' | 'MODERATE_NOISE' | 'LOUD_OK';
-  homeTime: 'STAYS_ALL_DAY' | 'ONLY_NIGHTS' | 'BALANCED'; // <-- Nueva sugerencia importante
+  homeTime: 'STAYS_ALL_DAY' | 'ONLY_NIGHTS' | 'BALANCED';
 }
 
 export interface TenantOnboardingPayload {
+  fullName: string;
   email: string;
   passwordHash: string;
-  phoneNumber: string; // <-- Nuevo (Dato de contacto directo)
+  phoneNumber: string;
   demographics: Demographics;
   preferences: LifestylePreferences;
 }

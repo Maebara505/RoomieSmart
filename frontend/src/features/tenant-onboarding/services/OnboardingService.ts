@@ -1,16 +1,42 @@
-import type { TenantLoginPayload, TenantOnboardingPayload } from '../types/Tenant';
-const API_URL = 'http://localhost:3000/api/v1'; // Endpoint simulado
+import type { TenantOnboardingPayload, TenantLoginPayload } from '../types/Tenant';
+
+// Cuando Ricardo monte el servidor en AWS, aquí cambiarás el localhost por la IP pública
+const API_BASE_URL = 'http://localhost:3000/api/v1'; 
 
 export const OnboardingService = {
-  loginTenant: async (credentials: TenantLoginPayload) => {
-    console.log('Validando Tenant:', credentials);
-    // Simulación de éxito
-    return { jwt: 'token_simulado_roomiesmart' }; 
+  // Función para registrar al usuario e iniciar su perfil de IA
+  registerTenant: async (payload: TenantOnboardingPayload): Promise<void> => {
+    const response = await fetch(`${API_BASE_URL}/auth/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    // ¡Aquí está el truco! Si el backend responde con un error (como correo duplicado)
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      // Lanzamos un error con el mensaje que nos mande Esteban desde el backend
+      throw new Error(errorData.message || 'Error en el registro');
+    }
   },
 
-  registerTenant: async (payload: TenantOnboardingPayload) => {
-    console.log('Enviando datos para Embeddings IA:', payload);
-    // Simulación de creación exitosa
-    return { success: true };
+  // Función para el Login
+  loginTenant: async (payload: TenantLoginPayload): Promise<{ jwt: string }> => {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Credenciales incorrectas');
+    }
+
+    return response.json(); // Retorna el token JWT si todo sale bien
   }
 };
