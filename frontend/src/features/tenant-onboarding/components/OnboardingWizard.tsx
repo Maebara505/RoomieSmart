@@ -36,11 +36,11 @@ export const OnboardingWizard = ({ onGoToLogin, onGoToWelcome }: WizardProps) =>
   });
 
   // 2. Inicializamos todas las preferencias de convivencia en vacío ('')
-  const [preferences, setPreferences] = useState<any>({
+const [preferences, setPreferences] = useState<any>({
     maxBudget: 150,
     cleanlinessLevel: '', 
     petTolerance: '', 
-    studySchedule: '', 
+    studySchedule: 'FLEXIBLE', // <-- ¡Cámbialo aquí para que el backend no llore!
     socialHabits: '', 
     smokingHabits: '', 
     foodSharing: '', 
@@ -97,16 +97,19 @@ export const OnboardingWizard = ({ onGoToLogin, onGoToWelcome }: WizardProps) =>
     setCurrentStep(4);
   };
 
-  const finishOnboarding = async (e: React.FormEvent) => {
+const finishOnboarding = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validación del Paso 4: Asegurar que ninguna regla de casa se quedó vacía
-    const { cleanlinessLevel, petTolerance, studySchedule, socialHabits, smokingHabits, foodSharing, noiseTolerance, homeTime } = preferences;
-    if (!cleanlinessLevel || !petTolerance || !studySchedule || !socialHabits || !smokingHabits || !foodSharing || !noiseTolerance || !homeTime) {
+    // Ya no extraemos ni validamos studySchedule
+    const { cleanlinessLevel, petTolerance, socialHabits, smokingHabits, foodSharing, noiseTolerance, homeTime } = preferences;
+    
+    if (!cleanlinessLevel || !petTolerance || !socialHabits || !smokingHabits || !foodSharing || !noiseTolerance || !homeTime) {
       return alert('⚠️ ¡Faltan respuestas! Por favor, completa todas las reglas de convivencia antes de finalizar.');
     }
     
     const payload: TenantOnboardingPayload = { fullName, email, passwordHash: password, phoneNumber, demographics, preferences };
+    
+    // ... resto del código
     
     try {
       await OnboardingService.registerTenant(payload);
